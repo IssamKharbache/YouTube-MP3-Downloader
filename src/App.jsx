@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import { MdDownload } from "react-icons/md";
 import { getIDfromURL } from "./parseUrl";
 import { Audio, ColorRing } from "react-loader-spinner";
-import dotenv from "dotenv";
 
 function App() {
   const inputUrlRef = useRef();
@@ -30,8 +29,13 @@ function App() {
 
     try {
       setLoading(true);
+
       const response = await axios.request(options);
       setUrlResult(response.data);
+      function convertSize() {
+        console.log(urlResult.size / 1024 / 1024);
+      }
+      convertSize();
     } catch (error) {
       setError(true);
       if (axios.defaults.timeout >= 10000 && urlResult === null) {
@@ -59,7 +63,7 @@ function App() {
             <h1>Title</h1>
             <p>{urlResult.title}</p>
             <h1>File Size </h1>
-            <p>{urlResult.filesize}</p>
+            <p>{(urlResult.filesize / 1024 / 1024).toFixed(2)} Mb</p>
             <div className="button_area">
               <a
                 href={urlResult.link}
