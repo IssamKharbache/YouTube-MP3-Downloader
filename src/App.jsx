@@ -30,7 +30,7 @@ function App() {
       setUrlResult(response.data);
     } catch (error) {
       setError(true);
-      if (axios.defaults.timeout >= 5000 && urlResult === null) {
+      if (axios.defaults.timeout >= 10000 && urlResult === null) {
         inputUrlRef.current.value = "";
         setError(true);
       }
