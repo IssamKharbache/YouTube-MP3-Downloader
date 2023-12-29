@@ -3,24 +3,28 @@ import { useRef, useState } from "react";
 import { MdDownload } from "react-icons/md";
 import { getIDfromURL } from "./parseUrl";
 import { Audio, ColorRing } from "react-loader-spinner";
+import dotenv from "dotenv";
+
 function App() {
   const inputUrlRef = useRef();
   const [urlResult, setUrlResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+
   axios.defaults.timeout = 10000;
 
   const handleSubmit = async (e) => {
+    const youtubeId = getIDfromURL(inputUrlRef.current.value);
     e.preventDefault();
     const options = {
       method: "GET",
-      url: "https://youtube-mp3-downloader2.p.rapidapi.com/ytmp3/ytmp3/",
+      url: "https://youtube-mp36.p.rapidapi.com/dl",
       params: {
-        url: inputUrlRef.current.value,
+        id: youtubeId,
       },
       headers: {
         "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
-        "X-RapidAPI-Host": "youtube-mp3-downloader2.p.rapidapi.com",
+        "X-RapidAPI-Host": "youtube-mp36.p.rapidapi.com",
       },
     };
 
@@ -55,7 +59,7 @@ function App() {
             <h1>Title</h1>
             <p>{urlResult.title}</p>
             <h1>File Size </h1>
-            <p>{urlResult.size}</p>
+            <p>{urlResult.filesize}</p>
             <div className="button_area">
               <a
                 href={urlResult.link}
