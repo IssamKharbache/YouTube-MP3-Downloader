@@ -7,8 +7,11 @@ import { Audio, ColorRing } from "react-loader-spinner";
 function App() {
   const inputUrlRef = useRef();
   const [urlResult, setUrlResult] = useState(null);
+
+  const [mp4UrlResult, setMp4UrlResult] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [type, setType] = useState("mp4");
 
   axios.defaults.timeout = 10000;
 
@@ -32,10 +35,9 @@ function App() {
 
       const response = await axios.request(options);
       setUrlResult(response.data);
-      function convertSize() {
-        console.log(urlResult.size / 1024 / 1024);
+      if (urlResult.filesize === null) {
+        setError(true);
       }
-      convertSize();
     } catch (error) {
       setError(true);
       if (axios.defaults.timeout >= 10000 && urlResult === null) {
@@ -53,12 +55,12 @@ function App() {
       <section className="content">
         <h1 className="content_title">Youtube to MP3 Downloader</h1>
         <p className="description">
-          {urlResult
+          {urlResult && urlResult.filesize
             ? "Video details"
             : "Change Youtube video links to MP3 in a second"}
         </p>
 
-        {urlResult ? (
+        {urlResult && urlResult.filesize ? (
           <div className="link_info">
             <h1>Title</h1>
             <p>{urlResult.title}</p>
@@ -86,14 +88,7 @@ function App() {
           </div>
         ) : (
           <form className="form" onSubmit={handleSubmit}>
-            {error ? (
-              <p className="errorMessage">
-                {" "}
-                Provide a correct link and Try again{" "}
-              </p>
-            ) : (
-              ""
-            )}
+            {error ? <p className="errorMessage">Error,Try again</p> : ""}
             <input
               className="link"
               ref={inputUrlRef}
