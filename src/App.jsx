@@ -8,7 +8,7 @@ function App() {
   const [urlResult, setUrlResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  axios.defaults.timeout = 5000;
+  axios.defaults.timeout = 10000;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
