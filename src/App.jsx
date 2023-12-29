@@ -8,7 +8,6 @@ function App() {
   const [urlResult, setUrlResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  axios.defaults.timeout = 10000;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,10 +29,6 @@ function App() {
       setUrlResult(response.data);
     } catch (error) {
       setError(true);
-      if (axios.defaults.timeout >= 10000 && urlResult === null) {
-        inputUrlRef.current.value = "";
-        setError(true);
-      }
     }
 
     setLoading(false);
