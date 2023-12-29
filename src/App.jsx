@@ -18,7 +18,7 @@ function App() {
         url: inputUrlRef.current.value,
       },
       headers: {
-        "X-RapidAPI-Key": "b69c3a8773mshb331c41fd8cf0c5p1338f7jsn0667578c006b",
+        "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
         "X-RapidAPI-Host": "youtube-mp3-downloader2.p.rapidapi.com",
       },
     };
