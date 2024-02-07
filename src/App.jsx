@@ -3,20 +3,19 @@ import { useRef, useState } from "react";
 import { MdDownload } from "react-icons/md";
 import { getIDfromURL } from "./parseUrl";
 import { Audio, ColorRing } from "react-loader-spinner";
+import toast from "react-hot-toast";
 
 function App() {
   const inputUrlRef = useRef();
   const [urlResult, setUrlResult] = useState(null);
 
-  const [mp4UrlResult, setMp4UrlResult] = useState({});
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-  const [type, setType] = useState("mp4");
 
   axios.defaults.timeout = 10000;
 
   const handleSubmit = async (e) => {
     const youtubeId = getIDfromURL(inputUrlRef.current.value);
+
     e.preventDefault();
     const options = {
       method: "GET",
@@ -29,24 +28,35 @@ function App() {
         "X-RapidAPI-Host": "youtube-mp36.p.rapidapi.com",
       },
     };
-
+    setLoading(true);
     try {
-      setLoading(true);
-
       const response = await axios.request(options);
       setUrlResult(response.data);
-      if (urlResult.filesize === null) {
-        setError(true);
+      if (response.data.status === "fail") {
+        toast.error("Please try a different URL");
+      }
+      if (response.data.status === "ok") {
+        toast.success("Your link is ready to download", {
+          style: {
+            border: "1px solid #713200",
+            padding: "16px",
+            color: "#713200",
+          },
+          iconTheme: {
+            primary: "#713200",
+            secondary: "#FFFAEE",
+          },
+        });
+      }
+
+      if (urlResult?.filesize === null) {
+        setLoading(false);
       }
     } catch (error) {
-      setError(true);
-      if (axios.defaults.timeout >= 10000 && urlResult === null) {
-        inputUrlRef.current.value = "";
-        setError(true);
-      }
+      toast.error("Please try a different URL");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -79,7 +89,6 @@ function App() {
                 className="search_again"
                 onClick={() => {
                   setUrlResult(null);
-                  setError(null);
                 }}
               >
                 Search Again
@@ -88,7 +97,6 @@ function App() {
           </div>
         ) : (
           <form className="form" onSubmit={handleSubmit}>
-            {error ? <p className="errorMessage">Error,Try again</p> : ""}
             <input
               className="link"
               ref={inputUrlRef}
